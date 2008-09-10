@@ -3,45 +3,55 @@ module MerbHasFlash
     def initialize(flash)
       @flash = flash
     end
-    
-    def []=(k, v)
-      @flash[k] = v
-      @flash.discard(k)
-      v
+
+    def []=(key, val)
+      @flash[key] = val
+      @flash.discard key
+      val
     end
-    
-    def [](k)
-      @flash[k]
+
+    def [](key)
+      @flash[key]
     end
   end
-  
-  class FlashHash < Hash
-    def initialize #:nodoc:
-      super
-      @used = {}
+
+  class FlashHash
+    def initialize(*args) #:nodoc:
+      @attrs = Hash.new(*args)
+      @keepers = []
     end
-    
-    def []=(k, v) #:nodoc:
-      keep(k)
-      super
+
+    def []=(key, val) #:nodoc:
+      @attrs[key] = val
+      keep key
     end
-    
-    def update(h) #:nodoc:
-      h.keys.each{ |k| discard(k) }
-      super
+
+    def [](key)
+      @attrs[key]
     end
-    
+
+    def update(hash) #:nodoc:
+      @attrs.update hash
+      hash.keys.each { |key| keep key }
+    end
+
     alias :merge! :update
-    
-    def replace(h) #:nodoc:
-      @used = {}
-      super
+
+    def replace(hash) #:nodoc:
+      @attrs.replace hash
+      keep  # keep with no args automatically clears out unused keys and keeps all used ones.
     end
-  
+
+
+    def method_missing(method_name, *args) #:nodoc:
+      @attrs.send(method_name, *args)
+    end
+
+
     # Sets a flash that will not be available to the next action, only to the current.
     #
     #     flash.now[:message] = "Hello current action"
-    # 
+    #
     # This method enables you to use the flash as a central messaging system in your app.
     # When you need to pass an object to the next action, you use the standard flash assign (<tt>[]=</tt>).
     # When you need to pass an object to the current action, you use <tt>now</tt>, and your object will
@@ -49,53 +59,33 @@ module MerbHasFlash
     #
     # Entries set via <tt>now</tt> are accessed the same way as standard entries: <tt>flash['my-key']</tt>.
     def now
-      FlashNow.new self
+      @_fn ||= FlashNow.new self  # This way, a new object is not created on every "now."
     end
-  
+
     # Keeps either the entire current flash or a specific flash entry available for the next action:
     #
     #    flash.keep            # keeps the entire flash
     #    flash.keep(:notice)   # keeps only the "notice" entry, the rest of the flash is discarded
-    def keep(k = nil)
-      use(k, false)
+    def keep(key = nil)
+      key.nil? ? @keepers = @attrs.keys : @keepers << key unless @keepers.include?(key)
     end
-  
+
     # Marks the entire flash or a single flash entry to be discarded by the end of the current action
     #
-    #     flash.keep                 # keep entire flash available for the next action
-    #     flash.discard(:warning)    # discard the "warning" entry (it'll still be available for the current action)
-    def discard(k = nil)
-      use(k)
+    #     flash.discard              # discard the entire hash (it'll still be available for the current action)
+    #     flash.discard(:warning)    # discard the "warning" entry (still available as above)
+    def discard(key = nil)
+      key.nil? ? @keepers = [] : @keepers.delete(key)
     end
-  
-    # Mark for removal entries that were kept, and delete unkept ones.
-    #
+
+    # Clear the keys that are kept, and delete the ones that are currently unkept
     # This method is called automatically by filters, so you generally don't need to care about it.
     def sweep #:nodoc:
-      keys.each do |k| 
-        unless @used[k]
-          use(k)
-        else
-          delete(k)
-          @used.delete(k)
-        end
-      end
-
-      (@used.keys - keys).each{|k| @used.delete k } # clean up after keys that could have been left over by calling reject! or shift on the flash
+      @attrs.keys.each { |key| @attrs.delete key unless @keepers.include?(key) }
+      discard
     end
-  
-    private
-      # Used internally by the <tt>keep</tt> and <tt>discard</tt> methods
-      #     use()               # marks the entire flash as used
-      #     use('msg')          # marks the "msg" entry as used
-      #     use(nil, false)     # marks the entire flash as unused (keeps it around for one more action)
-      #     use('msg', false)   # marks the "msg" entry as unused (keeps it around for one more action)
-      def use(k=nil, v=true)
-        unless k.nil?
-          @used[k] = v
-        else
-          keys.each{|key| use key, v }
-        end
-      end
+
+
   end
+
 end

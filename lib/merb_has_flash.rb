@@ -4,16 +4,18 @@ end
 
 require 'merb_has_flash/flash_hash'
 
+require 'merb_has_flash/helper'
+Merb::RenderMixin.send :include, MerbHasFlash::FlashHelperMixin
+
 require 'merb_has_flash/controller_extension'
 Merb::Controller.send :include, MerbHasFlash::ControllerExtension
 
-require 'merb_has_flash/helper'
-Merb::RenderMixin.send :include, MerbHasFlash::FlashHelperMixin
+
 
 module MerbHasFlash
   # The flash provides a way to pass temporary objects between actions. Anything you place in the flash will be exposed
   # to the very next action and then cleared out. This is a great way of doing notices and alerts, such as a create action
-  # that sets <tt>flash[:notice] = "Successfully created"</tt> before redirecting to a display action that can then expose 
+  # that sets <tt>flash[:notice] = "Successfully created"</tt> before redirecting to a display action that can then expose
   # the flash to its template. Actually, that exposure is automatically done. Example:
   #
   #   class WeblogController < Merb::Controller

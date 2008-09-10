@@ -5,20 +5,43 @@ describe "merb_has_flash FlashHash" do
   before(:each) do
     @hash = MerbHasFlash::FlashHash.new
   end
-  
-  it "should be a kind of Hash" do
-    @hash.should be_a_kind_of(Hash)
+
+  it "should not be a kind of Hash" do
+    # Merb 0.9.6 now transmutes all Hashes in sessions into Mashes.. destroying the functionality.
+    @hash.should_not be_a_kind_of(Hash)
   end
-  
-  it "should initialize an empty @used hash" do
-    @hash.instance_variable_get(:@used).should == {}
+
+  it "should keep appropriate variables on sweep" do
+    @hash[:a] = true
+    @hash[:b] = false
+    @hash[:c] = 90928
+
+    @hash.sweep
+
+    @hash[:a].should eql(true)
+    @hash[:b].should eql(false)
+    @hash[:c].should eql(90928)
   end
-  
-  it "should have more specs" do
-    
+
+  it "should not keep variables when using now" do
+    @hash.now[:a] = true
+    @hash[:b] = true
+    @hash.instance_variable_get(:@keepers).should_not include(:a)
   end
-  
-  it "should copy-and-paste most of this from Rails" do
-    
+
+  it "should discard appropriate variables on sweep" do
+    @hash.now[:a] = true
+    @hash[:b] = false
+    @hash[:c] = 90928
+    @hash.discard(:c)
+    @hash[:d] = 'Sir, the smurfs are eating your lunch...'
+
+    @hash.sweep
+
+    @hash[:a].should be_nil
+    @hash[:b].should eql(false)
+    @hash[:c].should be_nil
+    @hash[:d].should  eql('Sir, the smurfs are eating your lunch...')
   end
+
 end
