@@ -65,7 +65,7 @@ module MerbHasFlash
     # Keeps either the entire current flash or a specific flash entry available for the next action:
     #
     #    flash.keep            # keeps the entire flash
-    #    flash.keep(:notice)   # keeps only the "notice" entry, the rest of the flash is discarded
+    #    flash.keep(:notice)   # keeps only the "notice" entry
     def keep(key = nil)
       key.nil? ? @keepers = @attrs.keys : @keepers << key unless @keepers.include?(key)
     end
