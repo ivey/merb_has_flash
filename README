@@ -7,9 +7,12 @@ Most of the code is taken directly from Rails, which is
 Copyright (c) 2004-2006 David Heinemeier Hansson.
 This plugin is released under the same terms as Rails itself.
 
-Hacked together by Michael Ivey <ivey@gweezlebur.com> ... send bug
+Hacked together by Michael Ivey, with code
+reorganization and specs done by Jeremy Nicoll <jnicoll@gnexp.com>  
+Jeremy is now the maintainer for this project, so please send bug 
 reports and patches to him.
 
 Contributors:
 Tim Kofol
 Shay Arnett
+Martin Kihlgren

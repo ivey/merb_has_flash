@@ -42,11 +42,9 @@ module MerbHasFlash
       keep  # keep with no args automatically clears out unused keys and keeps all used ones.
     end
 
-
-    def method_missing(method_name, *args) #:nodoc:
-      @attrs.send(method_name, *args)
+    def method_missing(method_name, *args, &block) #:nodoc:
+      @attrs.send(method_name, *args, &block)
     end
-
 
     # Sets a flash that will not be available to the next action, only to the current.
     #
@@ -84,7 +82,6 @@ module MerbHasFlash
       @attrs.keys.each { |key| @attrs.delete key unless @keepers.include?(key) }
       discard
     end
-
 
   end
 
