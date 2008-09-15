@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "merb_has_flash"
-  s.version = "0.9.2"
+  s.version = "0.9.6"
   s.date = "2008-09-10"
   s.summary = "Rails' 'flash' session notification system ported to Merb"
   s.email = "jnicoll@gnexp.com"
