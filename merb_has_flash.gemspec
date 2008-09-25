@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name = "merb_has_flash"
-  s.version = "0.9.6"
+  s.version = "0.9.7"
   s.date = "2008-09-10"
   s.summary = "Rails' 'flash' session notification system ported to Merb"
-  s.email = "ivey@gweezlebur.com"
-  s.homepage = "http://github.com/ivey/merb_has_flash"
+  s.email = "jnicoll@gnexp.com"
+  s.homepage = "http://github.com/eltiare/merb_has_flash"
   s.description = s.summary
   s.has_rdoc = false
-  s.authors = ["Michael D. Ivey", "Jeremy Nicoll"]
+  s.author = "Jeremy Nicoll"
   s.files = ["LICENSE", "Rakefile", "README", "TODO", "lib/merb_has_flash.rb",
     "lib/merb_has_flash/controller_extension.rb",
     "lib/merb_has_flash/flash_hash.rb",

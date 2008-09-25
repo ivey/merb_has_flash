@@ -1,5 +1,5 @@
 merb_has_flash
-=================
+==============
 
 A plugin for the Merb framework that provides Rails-style flash.
 
@@ -7,16 +7,13 @@ Most of the code is taken directly from Rails, which is
 Copyright (c) 2004-2006 David Heinemeier Hansson.
 This plugin is released under the same terms as Rails itself.
 
-Hacked together by Michael Ivey <ivey@gweezlebur.com> ... send bug
-reports and patches to him.
+Originally hacked together by Michael Ivey <ivey@gweezlebur.com>
 
-Official Tree:  http://github.com/ivey/merb_has_flash
-
-NOTE: Jeremy Nicoll may be taking over this codebase, and his tree is
-  http://github.com/eltiare/merb_has_flash ... I'll try to keep master
-  updated from him until we decide (IE: I can convince him) to take it
+Current maintainer: Jeremy Nicoll <jnicoll@gnexp.com>  
+Please send bug reports and patches to him.
 
 Contributors:
 Tim Kofol
 Shay Arnett
-Jeremy Nicoll
+Martin Kihlgren
+Andrei Bocan
